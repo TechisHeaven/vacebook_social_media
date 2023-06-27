@@ -1,46 +1,8 @@
 import React from "react";
 
-const PhotosContainer = () => {
-  let Images = [
-    {
-      ImageId: 1,
-      ImageUrl: "https://random.imagecdn.app/500/150",
-    },
-    {
-      ImageId: 2,
-      ImageUrl: "https://random.imagecdn.app/500/150",
-    },
-    {
-      ImageId: 3,
-      ImageUrl: "https://random.imagecdn.app/500/150",
-    },
-    {
-      ImageId: 4,
-      ImageUrl: "https://random.imagecdn.app/500/150",
-    },
-    {
-      ImageId: 5,
-      ImageUrl: "https://random.imagecdn.app/500/150",
-    },
-    {
-      ImageId: 6,
-      ImageUrl: "https://random.imagecdn.app/500/150",
-    },
-    {
-      ImageId: 7,
-      ImageUrl: "/profile.jpg",
-    },
-    {
-      ImageId: 8,
-      ImageUrl: "https://random.imagecdn.app/500/150",
-    },
-    {
-      ImageId: 9,
-      ImageUrl: "https://random.imagecdn.app/500/150",
-    },
-  ];
+const PhotosContainer = ({posts}) => {
 
-
+  
   return (
     <>
       <div className="wrapper w-[490px] bg-white rounded-lg">
@@ -55,12 +17,12 @@ const PhotosContainer = () => {
           </a>
         </div>
         <div className="grid grid-cols-3 grid-rows-3 gap-1 p-4">
-          {Images.map((value) => {
+          {posts.map((value) => {
             return (
-              <div className="w-full" key={value.ImageId}>
+              <div className="w-full" key={value._id}>
                 <img
                   className=" w-full aspect-square object-cover"
-                  src={value.ImageUrl}
+                  src={'http://localhost:3000/public/images/'+value.postImg}
                   alt="Photos"
                 />
               </div>

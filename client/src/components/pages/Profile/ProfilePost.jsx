@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import LikeButton from "../Home/button";
 import axios from "axios";
 import { useDispatchContext, useStateContext } from "../../../state";
+import { toast } from "react-toastify";
 
 const ProfilePost = () => {
   const [Comment, setComment] = useState();
@@ -19,18 +20,30 @@ const ProfilePost = () => {
   const state = useStateContext();
   const dispatch = useDispatchContext();
 
-  let {posts} = state.posts;
-  let {user} = state.user;
+  let { posts } = state.posts;
+  let { user } = state.user;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
+  // const handleClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
+  const [openPopoverId, setOpenPopoverId] = useState(null);
+
+  const handleClick = (event, id) => {
     setAnchorEl(event.currentTarget);
+    setOpenPopoverId(id);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    setOpenPopoverId(null);
   };
+
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
@@ -98,16 +111,14 @@ const ProfilePost = () => {
         }
       }
       dispatch({ type: "FETCH_POSTS_SUCCESS", payload: data });
-   
     } catch (error) {
       dispatch({ type: "FETCH_POSTS_FAILURE", payload: error });
     }
   };
-  
+
   useEffect(() => {
     fetchData();
   }, [page]);
-
 
   //handle comment
   const HandleComment = async (post_id) => {
@@ -132,6 +143,16 @@ const ProfilePost = () => {
         type: "UPDATE_COMMENT",
         payload: { id: post_id, data: data.data },
       });
+      toast.success("Comment Added", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       setComment(null);
     } catch (error) {
       console.log(error);
@@ -155,6 +176,60 @@ const ProfilePost = () => {
       payload: { id: post_id, data: data },
     });
   };
+
+  // !delete post
+  const handleDeletePost = async (post_id) => {
+    
+    let result = await axios.put(
+      "http://localhost:3000/api/post/delete",
+      {
+        post_id: post_id,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (result.status === 204) {
+      dispatch({ type: "REMOVE_POST", payload: post_id });
+      toast.success("Post Removed", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      handleClose();
+    }
+  };
+
+  function formatTime(timestamp) {
+    const currentTime = new Date();
+    const postedTime = new Date(timestamp);
+    const timeDifference = currentTime - postedTime;
+
+    // Calculate the time difference in seconds, minutes, and hours
+    const seconds = Math.floor(timeDifference / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+
+    if (seconds < 60) {
+      return "just now";
+    } else if (minutes < 60) {
+      return `${minutes} minutes ago`;
+    } else if (hours < 24) {
+      return `${hours} hours ago`;
+    } else {
+      // Customize the date format based on your requirements
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return postedTime.toLocaleDateString(undefined, options);
+    }
+  }
 
   //post fetch request------------------------
 
@@ -191,20 +266,26 @@ const ProfilePost = () => {
                           </Link>
                         </h1>
                         <p className="text-sm text-gray-500">
-                          {postValue.updatedAt}
+                          {/* {postValue.updatedAt} */}
+                          {formatTime(postValue.updatedAt)}
                         </p>
                       </div>
                     </div>
                     <div className="right cursor-pointer">
                       <MoreHorizOutlinedIcon
-                        aria-describedby={id}
                         variant="contained"
-                        onClick={handleClick}
+                        // aria-describedby={id}
+                        // onClick={handleClick}
+                        
+                        aria-describedby={`popover-${postValue._id}`}
+                        // onClick={handleClick}
+                        onClick={(event) => handleClick(event, postValue.PostHeading)}
                       />
 
+
                       <Popover
-                        id={id}
-                        open={open}
+                        id={`popover-${postValue._id}`}
+                        open={openPopoverId === postValue.PostHeading}
                         anchorEl={anchorEl}
                         onClose={handleClose}
                         anchorOrigin={{
@@ -227,7 +308,12 @@ const ProfilePost = () => {
                             </div>
                           </div>
                           <hr />
-                          <div className="flex items-center hover:bg-gray-200 transition-all rounded-md cursor-pointer gap-2 px-2 py-2">
+                          <div
+                            onClick={() => {
+                              handleDeletePost(postValue._id);
+                            }}
+                            className="flex items-center hover:bg-gray-200 transition-all rounded-md cursor-pointer gap-2 px-2 py-2"
+                          >
                             <DeleteIcon />
                             <div className="flex flex-col">
                               <h1 className="font-semibold">Delete Post</h1>

@@ -13,6 +13,13 @@ export const initialUserState = {
   error: null,
 };
 
+// Define initial state
+export const initialFriendState = {
+  friendRequests: [],
+  loading: false,
+  error: null,
+};
+
 // Define the post reducer function
 export function postReducer(state = initialPostState, action) {
   switch (action.type) {
@@ -43,6 +50,17 @@ export function postReducer(state = initialPostState, action) {
       return {
         ...state,
         posts: [action.payload, ...state.posts],
+      };
+
+    case "REMOVE_POST":
+      const postIdToRemove = action.payload;
+      const updatedPosts = state.posts.filter(
+        (post) => post._id !== postIdToRemove
+      );
+      return {
+        ...state,
+        loading: false,
+        posts: updatedPosts,
       };
     case "UPDATE_LIKE":
       const postIndex = state.posts.findIndex(
@@ -84,6 +102,12 @@ export function postReducer(state = initialPostState, action) {
 //Define the user reducer function
 export function userReducer(state = initialUserState, action) {
   switch (action.type) {
+    case "LOGIN_RESET":
+      return {
+        ...state,
+        loading: false,
+        user: null,
+      };
     case "LOGIN_REQUEST":
       return {
         ...state,
@@ -116,11 +140,43 @@ export function userReducer(state = initialUserState, action) {
   }
 }
 
+export function friendRequestReducer(state = initialFriendState, action) {
+  switch (action.type) {
+    case "FETCH_FRIEND_REQUESTS_RESET":
+      return {
+        ...state,
+        loading: false,
+        friendRequests: [],
+      };
+    case "FETCH_FRIEND_REQUESTS_REQUEST":
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case "FETCH_FRIEND_REQUESTS_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        friendRequests: action.payload,
+      };
+    case "FETCH_FRIEND_REQUESTS_FAILURE":
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
 // Combine the reducers into a single reducer function
 export function rootReducer(state, action) {
   return {
     posts: postReducer(state.posts, action),
     user: userReducer(state.user, action),
+    friendRequests: friendRequestReducer(state.friendRequests, action),
   };
 }
 

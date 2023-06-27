@@ -22,6 +22,7 @@ const index = () => {
   const dispatch = useDispatchContext();
   const state = useStateContext();
   let {user} = state.user;
+  let {posts} = state.posts;
   
   let location = useNavigate();
   let inputAvatar = useRef();
@@ -162,8 +163,8 @@ const index = () => {
           {activeCompo == 1 ? (
             <div className="flex gap-4 flex-row">
               <div className="flex gap-4 flex-col">
-                <PhotosContainer />
-                <FriendsContainer />
+                <PhotosContainer posts={posts}/>
+                <FriendsContainer user={user}/>
               </div>
               <div className="flex gap-4 flex-col">
                 <AddPostContainer user={user} />

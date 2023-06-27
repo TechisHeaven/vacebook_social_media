@@ -1,8 +1,9 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import RegisterModal from "./RegisterModal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatchContext } from "../../../state";
+import { toast } from "react-toastify";
 
 const index = () => {
   const [email, setEmail] = useState("");
@@ -15,14 +16,13 @@ const index = () => {
 
   const dispatch = useDispatchContext();
 
-
   const handleSubmit = (e) => {
     dispatch({ type: "LOGIN_REQUEST" });
     e.preventDefault();
-    
+
     const config = {
       headers: {
-        Authorization: {"Content-Type": "application/json"}
+        Authorization: { "Content-Type": "application/json" },
       },
       data: {
         email: email,
@@ -38,7 +38,18 @@ const index = () => {
         ) {
           localStorage.setItem("user", JSON.stringify(response.data));
           localStorage.setItem("token", JSON.stringify(response.data.token));
+          toast.success(`Welcome, ${response.data.name}`, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
           dispatch({ type: "LOGIN_SUCCESS", payload: response.data });
+
           location("/");
         }
       })

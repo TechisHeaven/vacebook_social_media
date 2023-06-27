@@ -5,6 +5,7 @@ import axios from "axios";
 
 import { useLocation } from "react-router-dom";
 import { useDispatchContext } from "../../../state";
+import { toast } from "react-toastify";
 
 const RegisterModal = ({ open, handleClose }) => {
   
@@ -24,11 +25,8 @@ const RegisterModal = ({ open, handleClose }) => {
     dispatch({ type: "LOGIN_REQUEST" });
     e.preventDefault();
     let fullname = firstname + " " + lastname;
-    // const hashedPassword = bcrypt.hashSync(password, 10)
     const config = {
       headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.NjQ3YzM1ZTE5NjI5ZjVjNmVjZjk4NzE5.wVbsAu64rZb8r3ZCRISQHMCsdyCs1exZyFOKcm0bowQ",
         'Content-Type': "application/json",
       },
       data: {
@@ -46,6 +44,17 @@ const RegisterModal = ({ open, handleClose }) => {
         if((response.status== 201 || statusText== "Created") && response.data._id){
           localStorage.setItem("user", JSON.stringify(response.data));
           localStorage.setItem("token", JSON.stringify(response.data.token));
+          toast.success(`Welcome, ${response.data.name}`, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+
           dispatch({ type: "LOGIN_SUCCESS", payload: response.data });
           location("/")
         }

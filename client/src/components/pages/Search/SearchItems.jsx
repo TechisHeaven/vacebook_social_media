@@ -2,34 +2,59 @@ import { Avatar, Button } from "@mui/material";
 import React, { useContext, useEffect } from "react";
 import axios from "axios";
 import { useDispatchContext, useStateContext } from "../../../state";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const SearchItems = ({ type, data }) => {
   let state = useStateContext();
   let dispatch = useDispatchContext();
+  let location = useNavigate();
 
   const HandleAddFriend = async (data) => {
-    let user = JSON.parse(localStorage.getItem("user"));
-    let result = await axios.put(
-      `http://localhost:3000/api/user/addfriend`,
-      {
-        user: {
-          _id: data._id,
-          name: data.name,
-          pic: data.pic,
+    try {
+      let user = JSON.parse(localStorage.getItem("user"));
+      let result = await axios.put(
+        `http://localhost:3000/api/user/addfriend`,
+        {
+          user: {
+            _id: data._id,
+          },
+          mainUser: {
+            _id: user._id,
+          },
         },
-        mainUser: {
-          _id: user._id,
-        },
-      },
-      {
-        headers: {
-          "content-type": "application/json",
-        },
-      }
-    );
-    localStorage.setItem("user", JSON.stringify(result.data));
-    dispatch({ type: "UPDATE_USER", payload: result.data });
+        {
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
+      localStorage.setItem("user", JSON.stringify(result.data));
+      dispatch({ type: "UPDATE_USER", payload: result.data });
+      toast.success("Friend Request Send", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      location('/friends')
+    }
+  
   };
 
   // const user = useContext(UserContext);

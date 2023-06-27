@@ -7,16 +7,14 @@ import { useStateContext } from '../../state';
 const Sidebar = () => {
   const state = useStateContext();
   const { user } = state.user;
-  let userId = JSON.parse(localStorage.getItem("user"))
-  userId = user._id;
 
   return (
     <div className='h-full sticky top-[80px] bg-[#F0F2F5] z-10  max-lg:hidden'>
       <div className="sidebarWrapper px-2 flex flex-col">
-        <Link to={`/profile/${userId}`}>
+        <Link to={`/profile/${user._id}`}>
         <div className="items flex w-[344px] max-2xl:w-[244px] h-[50px] px-2 p-2 rounded-lg hover:bg-gray-200 transition-all cursor-pointer">
             <div className="itemWrapper flex flex-row justify-start gap-2 items-center">
-                <Avatar src={'http://localhost:3000/public/user/images/'+user.pic} className='rounded-full w-[35px]' alt="profile image" />
+                <Avatar src={import.meta.env.VITE_PUBLIC_USER_IMAGE_FOLDER +user.pic} className='rounded-full w-[35px]' alt="profile image" />
                 <h1 className='text-base font-medium'>{user.name}</h1>
             </div>
         </div>

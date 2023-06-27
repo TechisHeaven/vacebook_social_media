@@ -1,5 +1,5 @@
 const express = require("express");
-const { allPosts, createPost,userpost, updatePost, specificPosts } = require("../controllers/postController");
+const { allPosts, createPost,userpost, updatePost, specificPosts, deletePost } = require("../controllers/postController");
 const protect = require("../middleware/authMiddleware");
 const path = require("path")
 const router = express.Router();
@@ -21,5 +21,6 @@ router.route("/:id").get(protect, specificPosts);
 router.route("/userpost/:id/:page").get(userpost);
 router.route("/create").post(upload.single("postImg"), createPost);
 router.route("/update").put(updatePost);
+router.route("/delete").put(deletePost);
 
 module.exports = router;

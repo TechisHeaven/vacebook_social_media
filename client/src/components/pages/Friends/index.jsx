@@ -11,9 +11,9 @@ const index = () => {
         <div className="w-[360px] min-w-[360px]"></div>
         <Sidebar ActiveLinkCallback={setActiveLink} />
         <div className="p-8">
-        {activeLink == 1 ? <Home type="allFriends"/> : null}
-        {activeLink == 2 ? <Home type="allFriends"/> : null}
-        {activeLink == 3 ? <Home type="all"/> : null}
+        {activeLink == 1 ? <Home type="Home"/> : null}
+        {activeLink == 2 ? <Home type="friendRequest"/> : null}
+        {activeLink == 3 ? <Home type="allFriends"/> : null}
         </div>
       </div>
     </>

@@ -7,10 +7,11 @@ import AddToPhotosRoundedIcon from "@mui/icons-material/AddToPhotosRounded";
 import axios from "axios";
 import useFetch from "../../hooks/fetchpost";
 import { useDispatchContext, useStateContext } from "../../state";
+import { toast } from "react-toastify";
 
 const AddPostModal = ({ handleClose, open, user }) => {
   const [fieldsBlank, setFieldsBlank] = useState(true);
-  const [headingName, setHeadingName] = useState('');
+  const [headingName, setHeadingName] = useState("");
   const [PostImage, setPostImage] = useState({});
 
   const style = {
@@ -79,24 +80,64 @@ const AddPostModal = ({ handleClose, open, user }) => {
         "Content-Type": "multipart/form-data",
       },
     };
-    axios
-      .post("http://localhost:3000/api/post/create", formData, config)
-      .then((response) => {
-        if (response.status == 201 || statusText == "Created") {
-          const newPost = response.data;
-          const postExists = state.posts.find((post) => post._id === newPost.id);
+    try {
+      axios
+        .post("http://localhost:3000/api/post/create", formData, config)
+        .then((response) => {
+          if (response.status == 201 || statusText == "Created") {
+            const newPost = response.data;
 
-          if (!postExists) {
+            //!error occured here because make it comment
+            // const postExists = state.posts.find(
+            //   (post) => post._id === newPost.id
+            // );
+            // console.log(postExists);
+
+            // if (!postExists) {
+            //   dispatch({ type: "ADD_POST", payload: newPost });
+            // }
             dispatch({ type: "ADD_POST", payload: newPost });
+
+            toast.success(`Post Successfull`, {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+
+            handleClose();
           }
-          handleClose();
-        }
-      })
-      .catch((error) => {
-        if (error.status == 401) {
-          console.log("Error", error.message);
-        }
+        })
+        .catch((error) => {
+          if (error.status == 401) {
+            toast.error(`Error Successfull`, {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          }
+        });
+    } catch (error) {
+      toast.error(error.response.data.message || "Error Occured", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
+    }
   };
 
   return (

@@ -203,6 +203,21 @@ const specificPosts = async (req, res) => {
   }
 };
 
+const deletePost = async(req, res)=>{
+  const post_id = req.body.post_id;
+
+  if(!post_id){
+    return res.status(404).send({message: "Post not found", status: 404})
+  }
+
+  let deletepost = await Posts.deleteOne({_id: post_id})
+
+  if(deletepost){
+    return res.status(204).send({message: "Deleted", status: 204})
+  }
+
+}
+
 const allPosts = async (req, res) => {
   const page = parseInt(req.query.page) || 0;
   const limit = 2;
@@ -219,4 +234,5 @@ const allPosts = async (req, res) => {
   }
 };
 
-module.exports = { createPost, allPosts, userpost, updatePost, specificPosts };
+
+module.exports = { createPost, allPosts, userpost, updatePost, specificPosts, deletePost };

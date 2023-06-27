@@ -17,6 +17,7 @@ import {
   useStateContext,
 } from "./state";
 import { CircularProgress } from "@mui/material";
+import { toast } from "react-toastify";
 
 function App() {
   const dispatch = useDispatchContext();
@@ -24,6 +25,7 @@ function App() {
   let { user } = state.user;
 
   useEffect(() => {
+    dispatch({ type: "LOGIN_RESET" });
     if (!localStorage.getItem("user")) {
       dispatch({ type: "LOGOUT" });
       return;
@@ -40,12 +42,23 @@ function App() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(user)
         localStorage.setItem("user", JSON.stringify(data.user));
         dispatch({ type: "LOGIN_SUCCESS", payload: data.user });
       });
   }, []);
 
+  // const handleclick = () => {
+  //   toast.success("Notification message", {
+  //     position: "top-right",
+  //     autoClose: 5000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: false,
+  //     draggable: true,
+  //     progress: undefined,
+  //     theme: "light",
+  //   });
+  // };
 
   return (
     <>
@@ -53,7 +66,11 @@ function App() {
         // Render loading state if login status is being checked
         state.user.loading ? (
           <div className="w-full h-full bg-white fixed z-10 flex items-center justify-center">
-            <img src="/logo.png" className="w-[150px] animate-spin" alt="loader" />
+            <img
+              src="/logo.png"
+              className="w-[150px] animate-spin"
+              alt="loader"
+            />
           </div>
         ) : (
           <BrowserRouter>

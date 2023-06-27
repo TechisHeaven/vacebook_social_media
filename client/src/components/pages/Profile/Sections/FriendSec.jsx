@@ -16,7 +16,6 @@ const FriendSec = () => {
 
   const handleSearch = (e) => {
     let search = e.target.value;
-    console.log(search);
 
     if (search.length > 0) {
       // Data filter here

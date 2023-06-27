@@ -11,14 +11,12 @@ const PostWithID = ({ postid }) => {
   //   console.log(postid);
   const location = useNavigate();
 
-
   const [post, setPost] = useState({});
 
   useEffect(() => {
     const fetchPost = async () => {
-      
-      if(postid.length<24){
-        location('/')
+      if (postid.length < 24) {
+        location("/");
         return;
       }
       let token = JSON.parse(localStorage.getItem("token"));
@@ -42,24 +40,45 @@ const PostWithID = ({ postid }) => {
   const imageFolder = "http://localhost:3000/public/images/";
   let user = JSON.parse(localStorage.getItem("user"));
 
-  
   const shareLink = async (id) => {
     if (navigator.share) {
       try {
-        let webUrl = `http://localhost:5173/${id}`
+        let webUrl = `http://localhost:5173/${id}`;
         await navigator.share({
-          title: 'Example Page',
-          url: webUrl
+          title: "Example Page",
+          url: webUrl,
         });
       } catch (error) {
-        console.log('Error sharing:', error);
+        console.log("Error sharing:", error);
       }
     } else {
-      console.log('Web Share not supported on this browser');
+      console.log("Web Share not supported on this browser");
     }
   };
 
+  //timeformat
+  function formatTime(timestamp) {
+    const currentTime = new Date();
+    const postedTime = new Date(timestamp);
+    const timeDifference = currentTime - postedTime;
 
+    // Calculate the time difference in seconds, minutes, and hours
+    const seconds = Math.floor(timeDifference / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+
+    if (seconds < 60) {
+      return "just now";
+    } else if (minutes < 60) {
+      return `${minutes} minutes ago`;
+    } else if (hours < 24) {
+      return `${hours} hours ago`;
+    } else {
+      // Customize the date format based on your requirements
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return postedTime.toLocaleDateString(undefined, options);
+    }
+  }
 
   return (
     <>
@@ -74,7 +93,7 @@ const PostWithID = ({ postid }) => {
               <div className="left flex flex-row gap-2">
                 <Avatar
                   src={
-                    "http://localhost:3000/public/user/images/" +
+                    import.meta.env.VITE_PUBLIC_USER_IMAGE_FOLDER +
                     post.PostUserImg
                   }
                 />
@@ -87,7 +106,11 @@ const PostWithID = ({ postid }) => {
                       {post.PostUserName}
                     </Link>
                   </h1>
-                  <p className="text-sm text-gray-500">{post.updatedAt}</p>
+                  <p className="text-sm text-gray-500">
+                    {/* {post.updatedAt} */}
+                    {formatTime(post.updatedAt)}
+                    
+                  </p>
                 </div>
               </div>
             </div>
