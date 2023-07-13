@@ -34,6 +34,14 @@ const Home = ({ type }) => {
     }
   };
 
+ 
+  useEffect(() => {
+    fetchFriends();
+  }, []);
+
+
+
+  // friend request fetch
   const fetchFriendRequest = async () => {
     dispatch({ type: "FETCH_FRIEND_REQUESTS_REQUEST" });
     try {
@@ -58,12 +66,12 @@ const Home = ({ type }) => {
   };
 
   useEffect(() => {
-    fetchFriends();
-  }, []);
-
-  useEffect(() => {
     fetchFriendRequest();
   }, []);
+
+
+
+  
 
   return (
     <>

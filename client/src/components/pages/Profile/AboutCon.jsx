@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import BasicInfo from "./Sections/BasicInfo";
 
-const AboutCon = () => {
+const AboutCon = ({handleOpen}) => {
   const [activeTab, setActiveTab] = useState(1);
 
   return (
@@ -37,10 +37,10 @@ const AboutCon = () => {
         <div className="data w-full bg-white flex flex-col">
           <h1 className="p-2 text-xl font-semibold capitalize">contact info</h1>
           {
-            activeTab ==1 && <BasicInfo type="overview"/>
+            activeTab ==1 && <BasicInfo type="overview" handleOpen={handleOpen}/>
           }
           {
-            activeTab ==2 && <BasicInfo type="contactinfo"/> 
+            activeTab ==2 && <BasicInfo type="contactinfo" handleOpen={handleOpen}/> 
           }
           
         </div>

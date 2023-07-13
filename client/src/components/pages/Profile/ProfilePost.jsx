@@ -12,6 +12,7 @@ import LikeButton from "../Home/button";
 import axios from "axios";
 import { useDispatchContext, useStateContext } from "../../../state";
 import { toast } from "react-toastify";
+import { formatTime } from "../../../functions/formatDate";
 
 const ProfilePost = () => {
   const [Comment, setComment] = useState();
@@ -25,13 +26,6 @@ const ProfilePost = () => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
   const [openPopoverId, setOpenPopoverId] = useState(null);
 
   const handleClick = (event, id) => {
@@ -47,7 +41,7 @@ const ProfilePost = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-
+  //scroll event listener
   useEffect(() => {
     const handleScroll = () => {
       if (
@@ -208,31 +202,6 @@ const ProfilePost = () => {
     }
   };
 
-  function formatTime(timestamp) {
-    const currentTime = new Date();
-    const postedTime = new Date(timestamp);
-    const timeDifference = currentTime - postedTime;
-
-    // Calculate the time difference in seconds, minutes, and hours
-    const seconds = Math.floor(timeDifference / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-
-    if (seconds < 60) {
-      return "just now";
-    } else if (minutes < 60) {
-      return `${minutes} minutes ago`;
-    } else if (hours < 24) {
-      return `${hours} hours ago`;
-    } else {
-      // Customize the date format based on your requirements
-      const options = { year: "numeric", month: "long", day: "numeric" };
-      return postedTime.toLocaleDateString(undefined, options);
-    }
-  }
-
-  //post fetch request------------------------
-
   const imageFolder = "http://localhost:3000/public/images/";
   const loggedInUserId = JSON.parse(localStorage.getItem("user"))._id;
 
@@ -259,7 +228,7 @@ const ProfilePost = () => {
                       <div>
                         <h1 className="text-base font-medium">
                           <Link
-                            to={"profile/" + postValue.PostUserID}
+                            to={`/${postValue.PostUserName.replace(/ /g,'')}/`+postValue.PostUserID}
                             className="hover:underline"
                           >
                             {postValue.PostUserName}

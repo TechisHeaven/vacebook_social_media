@@ -7,6 +7,7 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import StoreOutlinedIcon from "@mui/icons-material/StoreOutlined";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import ChatIcon from "@mui/icons-material/Chat";
 import Notification from "./Notification";
 import AddToPhotosRoundedIcon from "@mui/icons-material/AddToPhotosRounded";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -17,15 +18,15 @@ const Header = () => {
   const dispatch = useDispatchContext();
   const state = useStateContext();
   const location = useNavigate();
-  let {user} = state.user;
+  let { user } = state.user;
+  let { friendRequests } = state.friendRequests;
 
-
-  const logoutuser = ()=>{
-    localStorage.removeItem('user')
-    localStorage.removeItem('token')
-    dispatch({type:"LOGOUT"})
-    location('/login')
-  }
+  const logoutuser = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    dispatch({ type: "LOGOUT" });
+    location("/login");
+  };
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorEl2, setAnchorEl2] = useState(null);
@@ -52,7 +53,6 @@ const Header = () => {
     setAnchorEl2(null);
   };
 
-
   const open = Boolean(anchorEl);
   const open2 = Boolean(anchorEl2);
   const id = open ? "simple-popover" : undefined;
@@ -62,18 +62,18 @@ const Header = () => {
     <>
       <div className="bg-white w-full h-[56px]  shadow-sm sticky top-0 z-50">
         <div className="navWrapper flex flex-row px-5 py-1 justify-between items-center relative max-md:gap-2">
-          <div className="flex flex-row gap-2">
+          <Link to="/" className="flex flex-row gap-2">
             {/* <FacebookRoundedIcon style={{ fontSize: "50px", color: "#1b74e4"}} /> */}
             <img src="/logo.png" className="w-[40px]" alt="" />
             <input
               type="text"
-              className="bg-[#F0F2F5] text-base outline-none px-2 rounded-full h-[40px] w-[240px] max-md:flex transition-all left-[65px]"
+              className="bg-[#F0F2F5] text-base outline-none px-2 rounded-full h-[40px] w-[240px] max-sm:max-w-[120px] max-md:flex transition-all left-[65px] max-sm:placeholder:text-sm"
               placeholder="Search Vacebook"
               onChange={(e) => handleSearchClick(e)}
               onKeyDown={(e) => handleSearch(e)}
               ref={searchBox}
             />
-          </div>
+          </Link>
           {/* max-lg:fixed max-lg:bottom-2 max-lg:bg-white max-lg:p-2 max-lg:rounded-md max-lg:left-0 max-lg:w-full */}
           <div className="navitems flex items-center justify-center w-[680px] max-lg:w-full max-sm:shadow-xl bottom-4 max-sm:fixed max-sm:bottom-0 max-sm:bg-white max-sm:p-2 max-sm:rounded-md max-sm:left-0">
             <ul className="flex flex-row gap-1 justify-between w-full h-full">
@@ -95,7 +95,7 @@ const Header = () => {
               </li>
               <li className="w-full flex justify-center">
                 <NavLink
-                 to={"/profile/"+user._id}
+                  to={"/profile/" + user._id}
                   className={({ isActive, isPending }) =>
                     isPending
                       ? "pending"
@@ -160,7 +160,18 @@ const Header = () => {
             </ul>
           </div>
           <div className="flex items-center gap-2">
-            <div className="notificationIcon p-2 bg-gray-200 rounded-full">
+            <div className="MessageIcon relative p-2 bg-gray-200 rounded-full">
+              <Link to="/messenger">
+                <ChatIcon />
+              </Link>
+            </div>
+            <div className="notificationIcon relative p-2 bg-gray-200 rounded-full">
+              {friendRequests.length > 0 && (
+                <div className="noti-indicator animate-pulse absolute -right-2 -bottom-2 bg-red-600 text-white p-2 h-6 flex items-center justify-end rounded-full">
+                  {friendRequests.length}
+                </div>
+              )}
+
               <NotificationsIcon onClick={handleClickNotification} />
 
               <Popover
@@ -197,7 +208,7 @@ const Header = () => {
               onClick={handleClick}
               aria-describedby={id}
               alt="Himanshu"
-              src={'http://localhost:3000/public/user/images/'+ user.pic}
+              src={"http://localhost:3000/public/user/images/" + user.pic}
             />
           </div>
           {/* popover  */}
@@ -214,9 +225,12 @@ const Header = () => {
             }}
           >
             <div className="flex min-w-[380px] flex-col p-4 gap-2">
-              <Link to={"/profile/"+user._id} className="flex gap-2 flex-col">
+              <Link to={"/profile/" + user._id} className="flex gap-2 flex-col">
                 <div className="flex gap-2 items-center justify-start transition-all hover:bg-[#e5e7eb] w-[350px] shadow-md hover:shadow-md p-2 rounded-lg">
-                  <Avatar alt="Himanshu" src={'http://localhost:3000/public/user/images/'+ user.pic} />
+                  <Avatar
+                    alt="Himanshu"
+                    src={"http://localhost:3000/public/user/images/" + user.pic}
+                  />
                   <p className="font-semibold">{user.name}</p>
                 </div>
               </Link>
@@ -226,7 +240,10 @@ const Header = () => {
                 </div>
                 <p className="font-semibold">Post</p>
               </div>
-              <div  onClick={()=>logoutuser()} className="flex gap-2 cursor-pointer  items-center justify-start transition-all hover:bg-[#e5e7eb] w-[350px] shadow-md hover:shadow-md p-2 rounded-lg">
+              <div
+                onClick={() => logoutuser()}
+                className="flex gap-2 cursor-pointer  items-center justify-start transition-all hover:bg-[#e5e7eb] w-[350px] shadow-md hover:shadow-md p-2 rounded-lg"
+              >
                 <div className="p-2 flex items-center justify-center bg-gray-300 rounded-full">
                   <LogoutIcon fontSize="small" />
                 </div>

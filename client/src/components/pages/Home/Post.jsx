@@ -123,7 +123,7 @@ const Post = () => {
         progress: undefined,
         theme: "light",
       });
-      setComment(null);
+      setComment('');
       inputRef.current.value = "";
     } catch (error) {
       console.log(error);
@@ -246,7 +246,7 @@ const Post = () => {
                       <div>
                         <h1 className="text-base font-medium">
                           <Link
-                            to={"profile/" + postValue.PostUserID}
+                            to={`/${postValue.PostUserName.replace(/ /g,'')}/`+postValue.PostUserID}
                             className="hover:underline cursor-pointer"
                           >
                             {postValue.PostUserName}

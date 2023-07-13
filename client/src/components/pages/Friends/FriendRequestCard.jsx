@@ -14,7 +14,6 @@ const FriendRequestCard = ({ value }) => {
 
 
   const HandleFriendRequest = async (value,RequestStatus) => {
-
     try {
       let result = await axios.put(
         "http://localhost:3000/api/user/friendrequests",

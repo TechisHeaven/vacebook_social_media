@@ -171,6 +171,19 @@ const userpost = async (req, res) => {
   const limit = 2;
   const _id = req.params.id;
 
+  if (!_id) {
+    return res.status(404).send({ message: "Error Occured" });
+  }
+  if (_id.length > 24) {
+    return res.status(400).json({ message: "Invalid ID length", status: 400 });
+  }
+  if (_id.length < 24) {
+    return res.status(400).json({ message: "Invalid ID length", status: 400 });
+  }
+
+
+
+
   const Post = await Posts.find({ PostUserID: _id })
     .sort({ createdAt: -1 })
     .skip(page * limit)

@@ -15,7 +15,7 @@ const Banner = ({user}) => {
       <div className="wrapper max-w-[1218px] w-full relative rounded-lg overflow-hidden">
         <img
           className="h-[450px] bg-center object-cover w-full"
-          src={'http://localhost:3000/public/user/images/'+user.pic}
+          src={'http://localhost:3000/public/user/images/'+ user.pic}
           alt=""
         />
         <div className="absolute bottom-5 right-5">

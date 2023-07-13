@@ -96,6 +96,18 @@ const updateUser = async (req, res) => {
       res.status(404).send({ message: "Failed to Update user porfile" });
     }
   }
+  if (type == "profile") {
+    UpdateUserRes = await User.updateOne(
+      { _id: _id },
+      { $set: { name: name, email: email, gender: gender } }
+    );
+    if (UpdateUserRes) {
+      let user = await User.findOne({ _id: _id });
+      res.status(200).send(user);
+    } else {
+      res.status(404).send({ message: "Failed to Update user" });
+    }
+  }
 };
 
 //fetch users
@@ -160,7 +172,6 @@ const removefriend = async (req, res) => {
   const main_user_id = req.body.mainUser._id;
   const user_id = req.body.user.user_id;
 
-
   // Remove user from the main_user's friends list
   const removeUserFromMainUser = await User.findOneAndUpdate(
     { _id: main_user_id },
@@ -172,7 +183,6 @@ const removefriend = async (req, res) => {
     { _id: user_id },
     { $pull: { friends: { user_id: main_user_id } } }
   );
-
 
   if (removeUserFromMainUser && removeMainUserFromUser) {
     let result = await User.findOne({ _id: main_user_id });

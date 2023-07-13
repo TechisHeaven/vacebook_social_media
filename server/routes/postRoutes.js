@@ -4,6 +4,7 @@ const protect = require("../middleware/authMiddleware");
 const path = require("path")
 const router = express.Router();
 const multer = require("multer");
+const errorHandler = require("../config/errorHandler");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -15,6 +16,13 @@ const storage = multer.diskStorage({
 });
 
 let upload = multer({ storage: storage });
+
+
+
+//?error handler  
+router.use(errorHandler);
+
+
 
 router.route("/").get(allPosts);
 router.route("/:id").get(protect, specificPosts);

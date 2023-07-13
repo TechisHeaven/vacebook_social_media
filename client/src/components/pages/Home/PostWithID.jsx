@@ -100,7 +100,7 @@ const PostWithID = ({ postid }) => {
                 <div>
                   <h1 className="text-base font-medium">
                     <Link
-                      to={"/profile/" + post.PostUserID}
+                      to={`/${postValue.PostUserName.replace(/ /g,'')}/`+postValue.PostUserID}
                       className="hover:underline"
                     >
                       {post.PostUserName}

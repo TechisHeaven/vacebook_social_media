@@ -9,11 +9,13 @@ import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import { Avatar, Link, Popover } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useStateContext } from "../../state";
+import { useDispatchContext, useStateContext } from "../../state";
+import { toast } from "react-toastify";
+import axios from "axios";
 
-const PostModal = ({postData}) => {
+const PostModal = ({ postData }) => {
   // let postValue = PostData[0];
-
+  const dispatch = useDispatchContext();
   const state = useStateContext();
   let postValue = postData;
 
@@ -50,8 +52,51 @@ const PostModal = ({postData}) => {
 
   const popoveropen = Boolean(popoveranchorEl);
   const id = popoveropen ? "simple-popover" : undefined;
-  
-  let {user} = state.user;
+  let { user } = state.user;
+
+
+
+   //handle comment
+   const HandleComment = async (post_id) => {
+    if (!Comment) {
+      return;
+    }
+    let user = JSON.parse(localStorage.getItem("user"));
+    let token = JSON.parse(localStorage.getItem("token"));
+
+    try {
+      const data = await axios.put(
+        `http://localhost:3000/api/post/update/?post_id=${post_id}&option=comment&id=${user._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+          method: "PUT",
+          comment: Comment,
+        }
+      );
+      dispatch({
+        type: "UPDATE_COMMENT",
+        payload: { id: post_id, data: data.data },
+      });
+      toast.success("Comment Added", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setComment('');
+      inputRef.current.value = "";
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
 
   return (
     <>
@@ -71,7 +116,9 @@ const PostModal = ({postData}) => {
       >
         <Box sx={style}>
           <div className="sticky top-0 shadow-md z-10 bg-white">
-            <h1 className="font-bold text-2xl text-center p-4">{postValue.PostUserName}</h1>
+            <h1 className="font-bold text-2xl text-center p-4">
+              {postValue.PostUserName}
+            </h1>
             <div
               className="p-2 rounded-full bg-gray-200 absolute top-3 right-3 cursor-pointer"
               onClick={handleClose}
@@ -88,7 +135,12 @@ const PostModal = ({postData}) => {
               <div className=" py-2 px-4 flex flex-col gap-2">
                 <div className="topheading flex flex-row justify-between items-center">
                   <div className="left flex flex-row gap-2">
-                    <Avatar src={'http://localhost:3000/public/user/images/'+ postValue.PostUserImg}/>
+                    <Avatar
+                      src={
+                        "http://localhost:3000/public/user/images/" +
+                        postValue.PostUserImg
+                      }
+                    />
                     <div>
                       <h1 className="text-base font-medium">
                         <Link
@@ -148,7 +200,12 @@ const PostModal = ({postData}) => {
               </div>
               {/* Post Image here */}
               <div className="postImage w-full grid place-items-center bg-black">
-                <img src={'http://localhost:3000/public/images/'+postValue.postImg} alt="post image" />
+                <img
+                  src={
+                    "http://localhost:3000/public/images/" + postValue.postImg
+                  }
+                  alt="post image"
+                />
               </div>
 
               {/* Post Bottom here */}
@@ -171,7 +228,9 @@ const PostModal = ({postData}) => {
                 </div>
               </div>
               <div className="commentSection flex flex-row pb-2 px-4 gap-2 items-center bg-white w-full p-2">
-                <Avatar src={'http://localhost:3000/public/user/images/'+ user.pic} />
+                <Avatar
+                  src={"http://localhost:3000/public/user/images/" + user.pic}
+                />
                 <input
                   type="text"
                   onChange={(e) => setComment(e.target.value)}
@@ -179,28 +238,35 @@ const PostModal = ({postData}) => {
                   placeholder="Write a comment..."
                 />
                 {Comment ? (
-                  <SendRoundedIcon className="cursor-pointer" color="primary" />
+                  <SendRoundedIcon
+                    className="cursor-pointer"
+                    color="primary"
+                    onClick={(e) => HandleComment(postValue._id)}
+                  />
                 ) : (
                   <SendRoundedIcon color="disabled" disabled />
                 )}
               </div>
-
+              {/* comment show here  */}
               <div className="comments flex flex-col gap-4 p-2 pl-4">
-                {
-                  postValue.PostComments.map((value, index)=>{
-                    return <div className="flex flex-row gap-2" key={index}>
-                  <Avatar src={'http://localhost:3000/public/user/images/'+ value.user_pic} />
-                  <div className="p-2 bg-gray-100 shadow-md rounded-2xl flex flex-col  max-w-[80%]">
-                    <h1 className="font-medium">{value.user_name}</h1>
-                    <span className="comment text-gray-600 text-sm">
-                      {value.comment}
-                    </span>
-                  </div>
-                </div>
-              
-                  })
-                }
-                
+                {postValue.PostComments.map((value, index) => {
+                  return (
+                    <div className="flex flex-row gap-2" key={index}>
+                      <Avatar
+                        src={
+                          "http://localhost:3000/public/user/images/" +
+                          value.user_pic
+                        }
+                      />
+                      <div className="p-2 bg-gray-100 shadow-md rounded-2xl flex flex-col  max-w-[80%]">
+                        <h1 className="font-medium">{value.user_name}</h1>
+                        <span className="comment text-gray-600 text-sm">
+                          {value.comment}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

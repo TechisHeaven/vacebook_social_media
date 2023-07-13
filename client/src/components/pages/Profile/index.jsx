@@ -16,19 +16,26 @@ import PhotoCon from "./Sections/PhotoCon";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatchContext, useStateContext } from "../../../state";
+import UserModal from "./utils/userModal";
 
 const index = () => {
   const [ProfileImg, SetProfileImg] = useState({});
   const dispatch = useDispatchContext();
   const state = useStateContext();
-  let {user} = state.user;
-  let {posts} = state.posts;
-  
+  let { user } = state.user;
+  let { posts } = state.posts;
+
   let location = useNavigate();
   let inputAvatar = useRef();
   const handleImageAvatar = () => {
     inputAvatar.current.click();
   };
+
+  //user Modal
+
+  const [openUser, setOpenUser] = React.useState(false);
+  const handleOpen = () => setOpenUser(true);
+  const handleClose = () => setOpenUser(false);
 
   // handle submit
   const handleSubmit = (e) => {
@@ -80,8 +87,9 @@ const index = () => {
   document.title = "Profile | Facebook";
   return (
     <>
+      <UserModal openUser={openUser} handleClose={handleClose}/>
       <div className="wrapper flex flex-col w-full items-center justify-center h-full">
-        <div className="w-full justify-center items-center flex bg-white flex-col">
+        <div className="profile w-full justify-center items-center flex bg-white flex-col">
           <Banner user={user} />
           <div className="profile flex w-full items-end justify-between max-w-[1218px] px-4 bg-white pb-8 border-b-2">
             <div className="flex gap-2 items-center">
@@ -111,7 +119,7 @@ const index = () => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold">{user.name}</h1>
-                <p>480 friends</p>
+                <p>{user.friends.length > 0 ? user.friends.length : 0} friends</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -138,6 +146,7 @@ const index = () => {
                   padding: ".4rem .5rem",
                 }}
                 className="flex gap-1"
+                onClick={()=>{handleOpen()}}
               >
                 <EditIcon fontSize="small" />
                 <p className="text-[.9rem] font-semibold">Edit Profile</p>
@@ -163,8 +172,8 @@ const index = () => {
           {activeCompo == 1 ? (
             <div className="flex gap-4 flex-row">
               <div className="flex gap-4 flex-col">
-                <PhotosContainer posts={posts}/>
-                <FriendsContainer user={user}/>
+                <PhotosContainer posts={posts} />
+                <FriendsContainer user={user} />
               </div>
               <div className="flex gap-4 flex-col">
                 <AddPostContainer user={user} />
@@ -174,7 +183,7 @@ const index = () => {
           ) : null}
           {activeCompo == 2 ? (
             <div className="flex gap-4 flex-row">
-              <AboutCon />
+              <AboutCon handleOpen={handleOpen}/>
             </div>
           ) : null}
           {activeCompo == 3 ? (

@@ -11,9 +11,10 @@ const Home = () => {
   document.title = "Home | Facebook";
   const state = useStateContext();
   const {user} = state.user;
-
+  //params 
   let params = useParams();
-
+  
+  
 
   return (
     <div className="flex justify-between items-start py-5">

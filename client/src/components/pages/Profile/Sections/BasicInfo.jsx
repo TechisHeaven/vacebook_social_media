@@ -7,7 +7,7 @@ import CakeIcon from "@mui/icons-material/Cake";
 import Person2RoundedIcon from "@mui/icons-material/Person2Rounded";
 import { useStateContext } from "../../../../state";
 
-const BasicInfo = ({ type }) => {
+const BasicInfo = ({ type, handleOpen}) => {
   const state = useStateContext();
   let { user } = state.user;
 
@@ -24,7 +24,7 @@ const BasicInfo = ({ type }) => {
                   <span className="text-xs">fullname</span>
                 </div>
               </div>
-              <div className="p-2 flex rounded-full bg-gray-200">
+              <div className="p-2 flex rounded-full bg-gray-200 cursor-pointer" onClick={()=>handleOpen()}>
                 <EditIcon style={{ color: "gray" }} />
               </div>
             </div>
@@ -37,7 +37,7 @@ const BasicInfo = ({ type }) => {
                     <span className="text-xs">mobile</span>
                   </div>
                 </div>
-                <div className="p-2 flex rounded-full bg-gray-200">
+                <div className="p-2 flex rounded-full bg-gray-200 cursor-pointer">
                   <EditIcon style={{ color: "gray" }} />
                 </div>
               </div>
@@ -50,7 +50,7 @@ const BasicInfo = ({ type }) => {
                   <span className="text-xs">email</span>
                 </div>
               </div>
-              <div className="p-2 flex rounded-full bg-gray-200">
+              <div className="p-2 flex rounded-full bg-gray-200 cursor-pointer" onClick={()=>handleOpen()}>
                 <EditIcon style={{ color: "gray" }} />
               </div>
             </div>
@@ -80,7 +80,7 @@ const BasicInfo = ({ type }) => {
                   <span className="text-xs">email</span>
                 </div>
               </div>
-              <div className="p-2 flex rounded-full bg-gray-200">
+              <div className="p-2 flex rounded-full bg-gray-200 cursor-pointer">
                 <EditIcon style={{ color: "gray" }} />
               </div>
             </div>
@@ -92,7 +92,7 @@ const BasicInfo = ({ type }) => {
                   <span className="text-xs">gender</span>
                 </div>
               </div>
-              <div className="p-2 flex rounded-full bg-gray-200">
+              <div className="p-2 flex rounded-full bg-gray-200 cursor-pointer">
                 <EditIcon style={{ color: "gray" }} />
               </div>
             </div>
@@ -108,7 +108,7 @@ const BasicInfo = ({ type }) => {
                   <span className="text-xs">Birth day and year</span>
                 </div>
               </div>
-              <div className="p-2 flex rounded-full bg-gray-200">
+              <div className="p-2 flex rounded-full bg-gray-200 cursor-pointer">
                 <EditIcon style={{ color: "gray" }} />
               </div>
             </div>
