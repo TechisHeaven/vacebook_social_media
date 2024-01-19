@@ -40,10 +40,25 @@ function App() {
         "content-type": "application/json",
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        response.json();
+      })
       .then((data) => {
         localStorage.setItem("user", JSON.stringify(data.user));
         dispatch({ type: "LOGIN_SUCCESS", payload: data.user });
+      })
+      .catch((error) => {
+        dispatch({ type: "LOGIN_FAILURE", payload: error });
+        toast.error("Something went wrong", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       });
   }, []);
 

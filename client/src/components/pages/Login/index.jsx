@@ -54,8 +54,9 @@ const index = () => {
         }
       })
       .catch((error) => {
+        if (error) dispatch({ type: "LOGIN_FAILURE", payload: error });
         if (error?.response?.status == 401) {
-          dispatch({ type: "LOGIN_FAILURE" });
+          dispatch({ type: "LOGIN_FAILURE", payload: error });
           setError("Invalid password or email address");
         }
       });

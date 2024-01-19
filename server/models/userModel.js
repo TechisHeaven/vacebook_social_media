@@ -8,11 +8,10 @@ const UserSchema = mongoose.Schema(
     password: { type: String, required: true },
     dob: { type: Object, required: true },
     gender: { type: String, required: true },
-    friends: {type: Array},
+    friends: { type: Array },
     pic: {
       type: String,
-      default:
-        "profile.webp",
+      default: "profile.webp",
     },
   },
   {
